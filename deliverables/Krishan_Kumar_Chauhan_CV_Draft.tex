@@ -1,0 +1,361 @@
+\documentclass[a4paper,11pt]{article}
+
+% ============================================================================
+% SELECTABLE DOCUMENT OPTIONS
+% Keep exactly one \documentclass line active. The current choice is A4, 11pt.
+% Alternatives (examples): comment the active line above and uncomment ONE:
+% \documentclass[a4paper,10pt]{article} % more compact; may reduce readability
+% \documentclass[a4paper,12pt]{article} % larger text; may add pages
+% ============================================================================
+
+\usepackage{comment}
+\usepackage{geometry}
+
+% PAGE GEOMETRY — active setting: A4 with 2 cm margins, matching the original.
+% Change only this geometry line when selecting another margin option.
+\geometry{
+  top=2cm,
+  bottom=2cm,
+  left=2cm,
+  right=2cm,
+  footskip=1cm
+}
+% Alternative compact setting: comment the active \geometry block and uncomment:
+% \geometry{top=1.7cm,bottom=1.7cm,left=1.7cm,right=1.7cm,footskip=0.8cm}
+% Alternative fullpage package: use ONLY if you remove the geometry settings above:
+% \usepackage[empty]{fullpage}
+% Legacy manual offsets are another alternative, NOT to be combined with geometry:
+% \addtolength{\oddsidemargin}{-0.5in}
+% \addtolength{\evensidemargin}{-0.5in}
+% \addtolength{\textwidth}{1in}
+% \addtolength{\topmargin}{-.5in}
+% \addtolength{\textheight}{1.0in}
+% Optional layout debugging (comment out for normal output):
+% \usepackage{showframe}
+% \usepackage{layout}
+
+% Select the TeX engine first so font/input settings are loaded in the right order.
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{lmodern}
+  % Optional sans-serif alternatives (choose one only; comment out lmodern first):
+  % \usepackage[sfdefault]{FiraSans}
+  % \usepackage[sfdefault]{roboto}
+  % \usepackage[sfdefault]{noto-sans}
+  % \usepackage[default]{sourcesanspro}
+  % Optional serif alternatives (choose one only; comment out lmodern first):
+  % \usepackage{CormorantGaramond}
+  % \usepackage{charter}
+  % Unicode mapping improves PDF text extraction; ATS compatibility still needs testing.
+  \IfFileExists{glyphtounicode-cmr.tex}{\input{glyphtounicode-cmr}}{%
+    \IfFileExists{glyphtounicode.tex}{\input{glyphtounicode}}{}}
+  \pdfgentounicode=1
+\fi
+
+% ============================================================================
+% REQUIRED / ORIGINAL TEMPLATE PACKAGES
+% ============================================================================
+\usepackage{ragged2e}
+\usepackage{latexsym}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{xcolor} % use xcolor instead of loading color twice
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{needspace}
+\usepackage{etoolbox} % explicitly provides \AtBeginEnvironment and \patchcmd
+\usepackage{titletoc}
+
+% Optional PDF/A metadata. Leave disabled for a standard CV PDF. If enabled,
+% load it before hyperref and provide the appropriate .xmpdata file.
+% \usepackage[a-2u]{pdfx}
+
+% Link and bookmark packages should be loaded after colors and before document use.
+\usepackage[hidelinks,bookmarks=true]{hyperref}
+\usepackage{bookmark}
+\urlstyle{same}
+
+\definecolor{primaryColor}{RGB}{0,79,144}
+
+% ============================================================================
+% USER-SELECTABLE TRUE/FALSE SETTINGS
+% For each option, keep one value active. To switch, comment the active value
+% and uncomment its alternative. These are examples, not mandatory preferences.
+% ============================================================================
+
+% true = show contact icons; false = plain text (current, ATS-friendlier).
+\newif\ifCVShowContactIcons
+\CVShowContactIconsfalse
+% \CVShowContactIconstrue
+
+% true = add an external-link glyph after hyperlinks; false = no glyph (current).
+\newif\ifCVShowLinkIcons
+\CVShowLinkIconsfalse
+% \CVShowLinkIconstrue
+
+% true = fully justified text; false = ragged-right (current, easier to scan).
+\newif\ifCVJustified
+\CVJustifiedfalse
+% \CVJustifiedtrue
+\AtBeginDocument{%
+  \ifCVJustified\justifying\else\RaggedRight\fi
+}
+
+% true = compact spacing; false = more generous white space.
+\newif\ifCVCompactLayout
+\CVCompactLayouttrue
+% \CVCompactLayoutfalse
+\ifCVCompactLayout
+  \setlist[itemize]{leftmargin=1.35em,topsep=2pt,itemsep=1pt,parsep=0pt}
+  \titlespacing*{\section}{0pt}{8pt}{4pt}
+  \setlength{\parskip}{1pt}
+\else
+  \setlist[itemize]{leftmargin=1.5em,topsep=4pt,itemsep=3pt,parsep=1pt}
+  \titlespacing*{\section}{0pt}{11pt}{6pt}
+  \setlength{\parskip}{3pt}
+\fi
+
+% true = use blue section headings; false = black section headings (current).
+\newif\ifCVAccentColor
+\CVAccentColorfalse
+% \CVAccentColortrue
+\ifCVAccentColor
+  \titleformat{\section}{\color{primaryColor}\vspace{-4pt}\scshape\raggedright\large\bfseries}{}{0em}{}[\color{primaryColor}\titlerule\vspace{-5pt}]
+\else
+  \titleformat{\section}{\vspace{-4pt}\scshape\raggedright\large\bfseries}{}{0em}{}[\color{black}\titlerule\vspace{-5pt}]
+\fi
+
+% true = footer shows Page X of Y; false = no page number (current template uses true).
+\newif\ifCVPageNumbers
+\CVPageNumberstrue
+% \CVPageNumbersfalse
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\ifCVPageNumbers
+  \fancyfoot[C]{\color{gray}\textit{\small Page \thepage{} of \pageref*{LastPage}}}
+  \pagestyle{fancy}
+\else
+  \pagestyle{empty}
+\fi
+
+% ============================================================================
+% GENERAL SPACING / ATS SETTINGS
+% ============================================================================
+\raggedbottom
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\tabcolsep}{0pt}
+\setlength{\columnsep}{0cm}
+\setcounter{secnumdepth}{0}
+
+% Optional two-column helpers retained from the original template.
+% Keep the CV body single-column for simpler text extraction; use these only
+% when a specific section genuinely benefits from columns.
+\newenvironment{onecolentry}{%
+  \begin{adjustwidth}{0.2cm}{0.2cm}%
+}{%
+  \end{adjustwidth}%
+}
+\newenvironment{twocolentry}[2][]{%
+  \onecolentry
+  \def\secondColumn{#2}%
+  \setcolumnwidth{\fill,3.1cm}%
+  \begin{paracol}{2}%
+}{%
+  \switchcolumn\raggedleft\secondColumn
+  \end{paracol}%
+  \endonecolentry
+}
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+
+% Contact and link icons are independently controlled by the true/false options above.
+\newcommand{\cvPhoneIcon}{}
+\newcommand{\cvEmailIcon}{}
+\newcommand{\cvLinkedinIcon}{}
+\newcommand{\cvExternalLinkIcon}{}
+\ifCVShowContactIcons
+  \renewcommand{\cvPhoneIcon}{\faPhone\hspace{0.12cm}}
+  \renewcommand{\cvEmailIcon}{\faEnvelope\hspace{0.12cm}}
+  \renewcommand{\cvLinkedinIcon}{\faLinkedinIn\hspace{0.12cm}}
+\fi
+\ifCVShowLinkIcons
+  \renewcommand{\cvExternalLinkIcon}{\raisebox{.15ex}{\footnotesize\faExternalLink*}}
+\fi
+\let\hrefWithoutArrow\href
+\renewcommand{\href}[2]{%
+  \hrefWithoutArrow{#1}{#2\ifCVShowLinkIcons\hspace{0.12em}\cvExternalLinkIcon\fi}%
+}
+
+% Current CV entry helpers.
+\newcommand{\roleentry}[4]{%
+  \begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
+    \textbf{#1} & \textit{#2} \\
+    \textit{#3} & \textit{#4} \\
+  \end{tabular*}\par\vspace{-3pt}%
+}
+\newcommand{\cvbullet}[1]{\item #1}
+
+% Original-template helpers retained for future reuse.
+\newcommand{\resumeItem}[1]{\item\small{#1\vspace{-2pt}}}
+\newcommand{\resumeSubheading}[4]{%
+  \vspace{-2pt}\item
+  \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & #2 \\
+    \textit{\small#3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-7pt}%
+}
+\newcommand{\resumeSubSubheading}[2]{%
+  \item\begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+    \textit{\small#1} & \textit{\small#2} \\
+  \end{tabular*}\vspace{-7pt}%
+}
+\newcommand{\resumeProjectHeading}[2]{%
+  \item\begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+    \small#1 & #2 \\
+  \end{tabular*}\vspace{-7pt}%
+}
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in,label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+% Optional debugging/alternative packages from the original preamble:
+% \usepackage{layout}  % show layout measurements
+% \usepackage{showframe} % show page boundaries (load before document)
+% \usepackage{paracol} % already loaded above; only use for true multi-column text
+% \usepackage{eso-pic} % for page overlays; not needed for standard CV content
+\begin{document}
+
+\begin{center}
+  {\LARGE\textbf{Krishan Kumar Chauhan}}\\[3pt]
+  \cvPhoneIcon\href{tel:+91-9876084064}{+91-9876084064} \quad | \quad
+  \cvEmailIcon\href{mailto:chauhankrishan010@gmail.com}{chauhankrishan010@gmail.com} \quad | \quad
+  \cvLinkedinIcon\href{https://www.linkedin.com/in/chauhankrishan010/}{linkedin.com/in/chauhankrishan010}
+\end{center}
+\vspace{-5pt}
+
+\section*{Professional Summary}
+Interdisciplinary AI researcher and Project Scientist with a background in Electronics and Communication Engineering and Microelectronics. Experience applying generative and predictive machine learning to materials research, industrial computer vision, embedded systems, and scientific signal analysis. Builds data-driven workflows and prototypes across scientific and manufacturing settings; currently pursuing a Ph.D. in Electronics and Communication Engineering.
+
+\section*{Education}
+\roleentry{Ph.D. -- Electronics and Communication Engineering}{September 2025 -- Present}{Panjab University}{Chandigarh, India}
+\roleentry{Master of Technology in Microelectronics}{November 2020 -- December 2022}{Panjab University}{Chandigarh, India}
+\roleentry{Bachelors of Engg. in Electronics and Communication Engineering}{August 2017 -- October 2020}{Panjab University}{Chandigarh, India}
+
+\section*{Professional Experience}
+
+\roleentry{Visiting Researcher}{19 January 2026 -- 15 March 2026}{Nottingham Trent University}{Nottingham, UK (on-site)}
+\begin{itemize}
+  \cvbullet{Preprocessed and downsampled 1 MHz biophysical signals acquired using optical nanotweezers, then trained multiple machine-learning algorithms to explore Alzheimer's versus non-Alzheimer's signal classification; real-time implementation is planned.}
+  \cvbullet{Designed and facilitated hands-on optical science activities for the Nottinghamshire Festival of Science and Curiosity 2026, using infrared cameras and spectrometers to explain animal vision and human eye pathology to the public.}
+\end{itemize}
+
+\roleentry{Project Scientist -- AI Expert}{24 September 2025 -- Present}{Panjab University}{Chandigarh, India}
+\begin{itemize}
+  \cvbullet{Developed an AI workflow for molecular discovery and materials optimization, combining a pretrained SMILES generator, a separately implemented GINE-based molecular generator, and a GINE property-prediction model using open datasets including QM9 and QM7-X.}
+  \cvbullet{Integrated ANI-2x/TorchANI potential-energy calculations to rank and filter candidate conformers; developed a web-based interface for user interaction.}
+  \cvbullet{Performed phase identification and quantitative analysis of polycrystalline samples using X-ray diffraction (XRD); applied the Scherrer equation to estimate average crystallite size.}
+  \cvbullet{Characterized more than 50 organic samples using Fourier-transform infrared spectroscopy (FTIR), identifying key functional groups.}
+\end{itemize}
+
+\roleentry{Junior Research Fellow}{27 June 2023 -- 26 June 2025}{Terminal Ballistics Research Laboratory (TBRL), DRDO}{India}
+\begin{itemize}
+  \cvbullet{Designed and analyzed structured/unstructured electronic circuit datasets to optimize fault detection and performance.}
+  \cvbullet{Developed data-driven models for component derating and reliability prediction, ensuring military-standard compliance.}
+  \cvbullet{Conducted software/hardware testing and authored technical documentation (SyRS, SRS, SDD, ICD) for streamlined development.}
+  \cvbullet{Designed and implemented GUI-based embedded systems for real-time monitoring and improved user interaction.}
+\end{itemize}
+
+\roleentry{Project Engineer}{16 January 2023 -- 16 June 2023}{Indian Institute of Technology Kanpur}{Kanpur, India}
+\begin{itemize}
+  \cvbullet{Developed a LabVIEW dashboard consolidating status data from 5- and 6-axis CNC machines through an intermediate hardware interface; installed the dashboard on a dedicated computer.}
+  \cvbullet{Trained custom object-detection models on product data and deployed a camera and Raspberry Pi system for real-time defect detection and dimension measurement.}
+  \cvbullet{Used sensor histories and CNC fault flags, including overheating and tool-misalignment indicators, to forecast machine-failure risks, supporting predictive maintenance and reducing downtime.}
+  \cvbullet{Applied a heuristic scheduler to allocate work across machines capable of the same tasks, reducing the production timeline for three units from more than one year to six months.}
+\end{itemize}
+
+\roleentry{Junior Researcher}{1 April 2021 -- 15 January 2023}{Panjab University, Design Innovation Centre}{Chandigarh, India}
+\begin{itemize}
+  \cvbullet{Coordinated lab activities and student project work at Panjab University's Design Innovation Centre; organized the DIC Offline Summer Internship Program in Electronics and AI.}
+  \cvbullet{Delivered expert sessions on embedded systems, machine learning, deep learning, and computer vision; mentored 12 research-driven projects.}
+  \cvbullet{Guided eight teams in preparing abstracts and posters for CHASCON-2022; the same projects were later showcased at the CRIKC-CII Exhibition on Technologies from Academia.}
+\end{itemize}
+
+\roleentry{Visiting Researcher (NTU--PU Collaboration)}{1 July 2021 -- 31 July 2022}{Nottingham Trent University}{Remote, Chandigarh, India}
+\begin{itemize}
+  \cvbullet{Conducted a literature review of deep-learning models for industrial defect detection.}
+  \cvbullet{Collected real-world machine-vision data during visits to more than 70 industrial sites for nut and fastener classification; contributed across dataset preparation, preprocessing, annotation, model training, and iterative validation.}
+  \cvbullet{Trained SSD MobileNet and YOLOv5 models for automated inspection. Demonstrated a computer-based camera setup using 640 $\times$ 640 images at a 22 FPS camera-capture rate; end-to-end inference speed was not recorded.}
+  \cvbullet{Co-developed a miniature conveyor prototype that classified products and routed them to separate bins; validated it through laboratory demonstration and pilot-level testing.}
+\end{itemize}
+
+\section*{Patents}
+\begin{itemize}
+  \cvbullet{Co-inventor of the patent application ``An Apparatus and a Method for Capturing Evidence Dynamically and Analyzing the Same,'' filed with CFSL, Chandigarh (Application No. 202311018214), 17 March 2023.}
+  \cvbullet{Inventor of the granted design registration ``Vision System with Camera'' (Design No. 386190-001), 14 May 2023.}
+  \cvbullet{Inventor of the granted design registration ``Spectral Absorbance Plotter'' (Design No. 450398-001), 3 March 2025.}
+\end{itemize}
+
+\section*{Publications}
+\begin{itemize}
+  \cvbullet{\textbf{An Optimized YOLOv8 Framework for Automatic Manufacturing Defect Detection in Bayonet-Bulb Base Holders}. Presentation at the 10th International Conference on Information and Communication Technology for Competitive Strategies (ICTCS-2025), April 2026. \href{https://10thictcs2025.sched.com/event/2Cqon/an-optimized-yolov8-framework-for-automatic-manufacturing-defect-detection-in-bayonet-bulb-base-holders}{Conference listing}.}
+  \cvbullet{\textbf{Design and Analysis of a Low-Cost Device for Detecting Prime Factors of Fire Ignition in Environment}. ACS Omega, December 2024. \href{https://doi.org/10.1021/acsomega.4c07465}{DOI}.}
+  \cvbullet{\textbf{Real-time Defect Detection and Classification in Fasteners}. Springer Book Series: Communications and Computer and Information Science, October 2024.}
+  \cvbullet{\textbf{Deep learning approach for Wafer failure pattern classification}. Poster/abstract presentation, 15th Chandigarh Science Congress (CHASCON-2022), September 2022.}
+  \cvbullet{\textbf{Taguchi based Design of Sequential Convolution Neural Network for Classification of Defective Fasteners}. Springer Book Series: Sentiment Analysis and Deep Learning, June 2022. \href{https://doi.org/10.1007/978-981-19-5443-6_39}{DOI}.}
+  \cvbullet{\textbf{Semiconductor wafer defect classification using convolution neural network: a binary case}. IOP Conference Series: Materials Science and Engineering, September 2022. \href{https://doi.org/10.1088/1757-899X/1225/1/012060}{DOI}.}
+\end{itemize}
+
+\section*{Professional Certifications}
+\begin{itemize}
+  \cvbullet{\textbf{Google Workspace Tools} -- Google Cloud. \href{https://www.credly.com/badges/5282c582-50f7-4e8d-aece-5ed7fc423548/public_url}{Certification}.}
+  \cvbullet{\textbf{Machine Learning Specialization} -- DeepLearning.AI | Stanford University. \href{https://coursera.org/share/23a8c527cbf504de6b244773e8f620a0}{Specialization certificate}.}
+  \begin{itemize}
+    \item Supervised Machine Learning: Regression and Classification \hfill \href{https://www.coursera.org/account/accomplishments/certificate/6H4HVCH4PACB}{Certification}
+    \item Advanced Learning Algorithms \hfill \href{https://www.coursera.org/account/accomplishments/certificate/CNEYQNJUWYEN}{Certification}
+    \item Unsupervised Learning, Recommenders, Reinforcement Learning \hfill \href{https://www.coursera.org/account/accomplishments/certificate/WH3FGLNUYHWU}{Certification}
+  \end{itemize}
+  \cvbullet{\textbf{AI for Future Workforce -- Facilitator Certification} -- Intel Corporation | DIC, Panjab University.}
+  \cvbullet{\textbf{Pantech Solutions:} MATLAB Master Class (Certificate No. PS-IETE-MC-0801); AI Master Class (Python) (Certificate No. PS-AI-PYTHON-0692); Master Class on MATLAB Simulink (Certificate No. PS-MATLAB-SIM-INTERN-0097).}
+\end{itemize}
+
+\section*{Awards and Recognition}
+\begin{itemize}
+  \cvbullet{Delivered an expert guest lecture on \textbf{National Technology Day} (May 11, 2026) at the Department of Geology, Panjab University, Chandigarh, sharing insights on the applications of AI in Geology and Geography with faculty and students.}
+  \cvbullet{Served as an expert judge for the \textbf{Inter School TechX IT Fest 2026 at YPS Mohali} on May 9, 2026, evaluating student projects and innovations in IT and Robotics across grades V to XII.}
+  \cvbullet{Delivered a specialized seminar on \textbf{Introductory Concepts and Core Principles of AI} for the NTU Optica, SPIE Student Chapters, and AOP at Nottingham Trent University (March 6, 2026).}
+  \cvbullet{\textbf{University Silver Medallist} and Top Rank holder in Master's of Technology in Microelectronics for exceptional academic excellence.}
+  \cvbullet{Recognized with the \textbf{Best Research Paper Award} at \textbf{International Conference on Multidisciplinary Aspects of Materials in Engineering (IC-MAME 2021) (8th-9th October 2021)} for innovative AI-driven defect classification in semiconductor manufacturing.}
+  \cvbullet{\textbf{Runner-Up (2nd Position)} -- MUJ-ACM Circuitrix Event, Manipal University Jaipur (2022).}
+  \cvbullet{\textbf{Runner-Up (2nd Position)} -- ANANT Tech Fest, PU-SSGRC, Hoshiarpur (2018).}
+  \cvbullet{\textbf{Winner (1st Position)} -- 23rd State Level Vocational Competition in Electronics, Chandigarh Administration (2015).}
+  \cvbullet{\textbf{Best in Academic (1st Position)} -- NIELIT, DOEACC, Chandigarh (2015).}
+\end{itemize}
+
+\section*{Technical Skills}
+\begin{itemize}[label={}]
+  \cvbullet{\textbf{Programming:} Python, C, Embedded C.}
+  \cvbullet{\textbf{AI and machine learning:} Generative AI, graph neural networks (GINE), molecular property prediction, supervised learning, computer vision, SSD MobileNet, YOLOv5, YOLOv8, TensorFlow, PyTorch, Keras, scikit-learn.}
+  \cvbullet{\textbf{Scientific and computer-vision libraries:} RDKit, TorchANI (ANI-2x), OpenCV, Pandas, NumPy, Matplotlib; molecular descriptors.}
+  \cvbullet{\textbf{Embedded and industrial systems:} LabVIEW, Nextion HMI, Raspberry Pi, Jetson Nano, STM32, ESP32, Arduino.}
+  \cvbullet{\textbf{Scientific characterization:} X-ray diffraction (XRD), Fourier-transform infrared spectroscopy (FTIR), Scherrer crystallite-size analysis.}
+  \cvbullet{\textbf{Web, analysis, and visualization:} FastAPI, Tableau, Excel, MATLAB, MATLAB Simulink.}
+\end{itemize}
+
+\end{document}
